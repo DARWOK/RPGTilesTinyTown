@@ -8,9 +8,21 @@
 #include <vector>
 #include <UISystem.h>
 #include <World.h>
+#include "Toolbox.h"
+#include "Singleton.h"
+#include "LinkedList.h"
+
+typedef Singleton<Toolbox> Logger;
 
 // es válido usarlo porque estamos desarrollando con el namespace de neustro juego
 using namespace LoW;
+
+struct LinkedListNode {
+	int data;
+	LinkedListNode* next;
+
+	LinkedListNode(int value) : data(value), next(nullptr) {}
+};
 
 int main ()
 {
@@ -82,6 +94,45 @@ int main ()
 	UISystem::Test(); // probar el método estático del singleton de UI
 
 	UISystem::getInstance().createLabel(TextFormat("No place to hide"), 500, GetScreenHeight()-40, 35);
+
+	// Prueba de singleton
+	// Queremos que nuestro Toolbox sea un singleton
+	// No es necesario hacerlo con new, simplemente llamando al instance se crea la instancia
+	Singleton<Toolbox>::instance().id = 100;
+	Singleton<Toolbox>::instance().name = "Toolbox Principal";
+
+	Singleton<Toolbox>::instance().Log("Hola desde el singleton");
+	Logger::instance().Log("Hola desde el singleton con typedef");
+
+	// Crear e imprimir lista enlazada con los valores: 1995, 1999, 2025
+	LinkedListNode* node1 = new LinkedListNode(1995);
+	LinkedListNode* node2 = new LinkedListNode(1999);
+	LinkedListNode* node3 = new LinkedListNode(2025);
+
+	node1->next = node2;
+	node2->next = node3;
+
+	// Imprimir la lista
+	LinkedListNode* current = node1;
+	std::cout << "Linked List Values: ";
+	while (current != nullptr) {
+		std::cout << current->data << " -> ";
+		current = current->next;
+	}
+	std::cout << "nullptr" << std::endl;
+
+	// Liberar memoria de la lista enlazada
+	delete node1;
+	delete node2;
+	delete node3;
+
+	LinkedList nameList;
+	nameList.append("Ixchel");
+	nameList.append("Scian");
+	nameList.append("Rivia");
+
+	// Imprimir lista
+	nameList.print();
 
 	// game loop a 60 fps
 	while (!WindowShouldClose())		// run the loop untill the user presses ESCAPE or presses the Close button on the window

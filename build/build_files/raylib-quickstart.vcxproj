@@ -535,6 +535,7 @@
     <ClInclude Include="..\..\include\IAttacker.h" />
     <ClInclude Include="..\..\include\Image.h" />
     <ClInclude Include="..\..\include\Label.h" />
+    <ClInclude Include="..\..\include\LinkedList.h" />
     <ClInclude Include="..\..\include\maptinytown.h" />
     <ClInclude Include="..\..\include\Player.h" />
     <ClInclude Include="..\..\include\resource_dir.h" />

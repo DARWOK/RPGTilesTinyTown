@@ -30,6 +30,7 @@
     <ClInclude Include="..\..\include\maptinytown.h" />
     <ClInclude Include="..\..\include\Singleton.h" />
     <ClInclude Include="..\..\include\Toolbox.h" />
+    <ClInclude Include="..\..\include\LinkedList.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
