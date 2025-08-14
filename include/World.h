@@ -1,117 +1,85 @@
 #pragma once
 #include "raylib.h"
-#include <iostream>
 #include <fstream>
-#include <string>
+#include <stdexcept>
+#include <filesystem>
+#include <cstdio>
 
 #define TILE_SIZE 64
 #define TILEMAPX 16
 #define TILEMAPY 12
 #define MAX_TILES (TILEMAPX * TILEMAPY)
 
-namespace LoW
-{
-	class World
-	{
-	private:
-		static World* instance; // Singleton instancia
-		World() = default; // Constructor privado para evitar instanciación externa
-		World(const World&) = delete; // Eliminar el constructor de copia
-		World& operator=(const World&) = delete; // Eliminar el operador de asignación
+namespace LoW {
+    class World {
+    public:
+        static World* instance;
+        size_t* tilemap = nullptr;
+        Texture tiles[MAX_TILES]{};
 
-	public:
-		//Texture background;
-		//Texture collisionMask;
-		//Image collisionMaskImg;
-		//float tileScale = TILE_SIZE / tiles[0].width;
+        static World& getInstance() {
+            static World instance;
+            return instance;
+        }
 
-		size_t* tilemap;
-		Texture tiles[MAX_TILES];
+        void InitWorld(const char* mapFile) {
+            LoadTiles("tinytown/Tiles");
+            LoadMap(mapFile);
+        }
 
-		static World& getInstance()
-		{
-			if (!instance)
-			{
-				instance = new World();
-				instance->InitWorld("map.txt"); // Inicializar el mundo predeterminado
-			}
-			return *instance;
-		}
+        void Draw() {
+            for (size_t y = 0; y < TILEMAPY; y++) {
+                for (size_t x = 0; x < TILEMAPX; x++) {
+                    size_t idx = y * TILEMAPX + x;
+                    DrawTexture(tiles[tilemap[idx]], static_cast<int>(x * TILE_SIZE), static_cast<int>(y * TILE_SIZE), WHITE);
+                }
+            }
+        }
 
-		//cargar mundo default
-		void InitWorld(const char* filename)
-		{
-			//background = LoadTexture("world1.jpg");
-			////collisionMask = LoadTexture("world1_mask.png");
-			//collisionMaskImg = LoadImage("world1_mask.png");
-			////para que cada byte represente un pixel en escala de grises
-			//ImageFormat(&collisionMaskImg, PIXELFORMAT_UNCOMPRESSED_GRAYSCALE);
-			char buffer[32];
-			for (size_t i = 0; i < MAX_TILES; i++)
-			{
-				sprintf(buffer, "tinytown/Tiles/tile_%04zu.png", i);
-				tiles[i] = LoadTexture(buffer);
-			}
+        ~World() {
+            for (auto& t : tiles)
+                if (t.id) UnloadTexture(t);
+            delete[] tilemap;
+        }
 
-			tilemap = new size_t[MAX_TILES];
-			std::string workingDir = GetWorkingDirectory();
-			std::ifstream file(workingDir + filename);
-			if (file.is_open())
-			{
-				for (size_t y = 0; y <TILEMAPY; y++)
-				{
-					for (size_t x = 0; x < TILEMAPX; x++)
-					{
-						//std::string value;
-						//std::getline(file, value, ','); // Leer hasta la coma
-						//std::cout << "Valor leido: " << value << std::endl;
-						std::string value;
-						std::getline(file, value, ',');
-						size_t index = y * TILEMAPX + x;
-						tilemap[index] = std::stoi(value);
-					}
-				}
-			}
-			else
-			{
-				std::cout << "Error: No se pudo abrir el archivo " << filename << std::endl;
-			}
-		}
+    private:
+        World() = default;
+        World(const World&) = delete;
+        World& operator=(const World&) = delete;
 
-		void Draw()
-		{
-			//DrawTexture(background, 0, 0, WHITE);
-			for (size_t y = 0; y < TILEMAPY; y++)
-			{
-				for (size_t x = 0; x < TILEMAPX; x++)
-				{
-					size_t index = y * TILEMAPX + x;
-					size_t tileID = tilemap[index];
+        void LoadTiles(const std::string& dir) {
+            char path[256];
+            for (size_t i = 0; i < MAX_TILES; i++) {
+                std::snprintf(path, sizeof(path), "%s/tile_%04zu.png", dir.c_str(), i);
+                if (!std::filesystem::exists(path))
+                    throw std::runtime_error("Tile no encontrada");
 
-					if (tileID < MAX_TILES)
-					{
-						DrawTexture(tiles[tileID], x * TILE_SIZE, y * TILE_SIZE, WHITE);
-					}
-				}
-			}
+                Image img = LoadImage(path);
+                if (!img.data)
+                    throw std::runtime_error("Tile no encontrada");
 
-		}
+                tiles[i] = LoadTextureFromImage(img);
+                UnloadImage(img);
+            }
+        }
 
-		//checa si el pixel en la posicion point tiene bloqueo
-		//bool CheckCollision(Vector2 point)
-		//{
-		//	//acceder al pixel en particular
-		//	int index = (point.y * collisionMaskImg.width + point.x);
+        void LoadMap(const std::string& file) {
+            if (!std::filesystem::exists(file))
+                throw std::runtime_error("Mapa no encontrado");
 
-		//	char* imgdata = (char*)collisionMaskImg.data; //acceder a los datos de la imagen
+            std::ifstream in(file);
+            if (!in)
+                throw std::runtime_error("Mapa no encontrado");
 
-		//	std::cout << "valor en pixel ( " << point.x << "," << point.y << "): " << (int)imgdata[index] << std::endl;
-
-		//	return (imgdata[index] != 0); // si el valor es menor a 128, no hay colision
-
-		//}
-	};
+            tilemap = new size_t[MAX_TILES];
+            for (size_t i = 0; i < MAX_TILES; i++) {
+                if (!(in >> tilemap[i]) || tilemap[i] >= MAX_TILES)
+                    throw std::runtime_error("Mapa malformado");
+            }
+            // Si hay datos extra después del mapa
+            size_t extra;
+            if (in >> extra)
+                throw std::runtime_error("Mapa malformado");
+        }
+    };
 }
-
-
-
