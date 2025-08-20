@@ -5,9 +5,40 @@
 
 using namespace LoW;
 
+void Player::SetWeaponLabel(Label* lbl)
+{
+	weaponLabel_ = lbl;
+}
+
+void Player::UpdateWeaponLabel_(Weapon* w)
+{
+	if (!weaponLabel_) return;
+	weaponText_ = std::string("Arma: ") + (w ? w->name : "—");
+	weaponLabel_->text = weaponText_.c_str();
+}
+
+void Player::PickupWeapon(Weapon* w)
+{
+	if (!w) return;
+	inventory.append(w);
+	w->owner = this;
+	SetWeapon(static_cast<IAttacker*>(w));
+	UpdateWeaponLabel_(w);
+}
+
+void Player::NextWeapon()
+{
+	Weapon* w = inventory.next();
+	if (w) {
+		SetWeapon(static_cast<IAttacker*>(w));
+		UpdateWeaponLabel_(w);
+	}
+}
+
 // sobrecargar la función update de GameObject para mover el objeto con las teclas
 void Player::update()
 {
+	animData.direction = ANIM_IDLE;
 	if (IsKeyDown(KEY_A))
 	{
 		position.x -= speed*GetFrameTime();
@@ -27,6 +58,10 @@ void Player::update()
 	{
 		position.y += speed*GetFrameTime();
 		animData.direction = ANIM_DOWN;
+	}
+
+	if (IsKeyPressed(KEY_E)) {
+		NextWeapon();
 	}
 
 	// Calcular el frame de la animación

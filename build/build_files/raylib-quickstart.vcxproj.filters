@@ -31,6 +31,8 @@
     <ClInclude Include="..\..\include\Singleton.h" />
     <ClInclude Include="..\..\include\Toolbox.h" />
     <ClInclude Include="..\..\include\LinkedList.h" />
+    <ClInclude Include="..\..\include\LinkedListNode.h" />
+    <ClInclude Include="..\..\include\Inventory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">

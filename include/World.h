@@ -5,17 +5,18 @@
 #include <filesystem>
 #include <cstdio>
 
-#define TILE_SIZE 64
+#define TILE_SIZE 16
 #define TILEMAPX 16
 #define TILEMAPY 12
-#define MAX_TILES (TILEMAPX * TILEMAPY)
+#define MAX_TILES 132
+#define MAP_TILES (TILEMAPX * TILEMAPY)
 
 namespace LoW {
     class World {
     public:
         static World* instance;
         size_t* tilemap = nullptr;
-        Texture tiles[MAX_TILES]{};
+        Texture tiles[MAP_TILES]{};
 
         static World& getInstance() {
             static World instance;
@@ -71,8 +72,8 @@ namespace LoW {
             if (!in)
                 throw std::runtime_error("Mapa no encontrado");
 
-            tilemap = new size_t[MAX_TILES];
-            for (size_t i = 0; i < MAX_TILES; i++) {
+            tilemap = new size_t[MAP_TILES];
+            for (size_t i = 0; i < MAP_TILES; i++) {
                 if (!(in >> tilemap[i]) || tilemap[i] >= MAX_TILES)
                     throw std::runtime_error("Mapa malformado");
             }

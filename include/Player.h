@@ -4,6 +4,8 @@
 #include <iostream>
 #include "Weapon.h"
 #include "Sidekick.h"
+#include "Inventory.h"
+#include "Label.h"
 
 namespace LoW
 {
@@ -12,7 +14,8 @@ namespace LoW
         ANIM_DOWN,
         ANIM_UP,
         ANIM_LEFT,
-        ANIM_RIGHT
+        ANIM_RIGHT,
+        ANIM_IDLE
     };
 
     struct SAnimData
@@ -43,9 +46,20 @@ namespace LoW
         // Show pick up weapon message
         bool shouldPromptForWeapon = false;
         const char* weaponPrompt = "Presiona F para recoger arma";
+        Label* weaponLabel_ = nullptr;
+        std::string weaponText_;
+        void UpdateWeaponLabel_(Weapon* w);
 
     public:
+        Inventory inventory;
         float speed = 10.0f;
+
+        void NextWeapon();
+
+        // Nuevo: recoger arma
+        void PickupWeapon(Weapon* w);
+
+        void SetWeaponLabel(Label* lbl);
 
         //constructor heredado de GameObject
         /*Player(Vector2 pos, std::string _name, Texture tex) :

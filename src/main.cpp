@@ -17,11 +17,11 @@ typedef Singleton<Toolbox> Logger;
 // es válido usarlo porque estamos desarrollando con el namespace de neustro juego
 using namespace LoW;
 
-struct LinkedListNode {
+struct LinkedListN {
     int data;
-    LinkedListNode* next;
+    LinkedListN* next;
 
-    LinkedListNode(int value) : data(value), next(nullptr) {}
+    LinkedListN(int value) : data(value), next(nullptr) {}
 };
 
 int main()
@@ -91,12 +91,12 @@ int main()
         Logger::instance().Log("Hola desde el singleton con typedef");
 
         // Crear e imprimir lista enlazada con los valores: 1995, 1999, 2025
-        LinkedListNode* node1 = new LinkedListNode(1995);
-        LinkedListNode* node2 = new LinkedListNode(1999);
-        LinkedListNode* node3 = new LinkedListNode(2025);
+        LinkedListN* node1 = new LinkedListN(1995);
+        LinkedListN* node2 = new LinkedListN(1999);
+        LinkedListN* node3 = new LinkedListN(2025);
         node1->next = node2; node2->next = node3;
 
-        LinkedListNode* current = node1;
+        LinkedListN* current = node1;
         std::cout << "Linked List Values: ";
         while (current != nullptr) { std::cout << current->data << " -> "; current = current->next; }
         std::cout << "nullptr" << std::endl;
@@ -107,6 +107,9 @@ int main()
         nameList.append("Scian");
         nameList.append("Rivia");
         nameList.print();
+
+        Label* weaponLabel = UISystem::getInstance().createLabel("Arma: —", 10, 10, 22);
+        playerCharacter->SetWeaponLabel(weaponLabel);
 
         // game loop a 60 fps
         while (!WindowShouldClose())
