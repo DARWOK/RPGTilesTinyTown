@@ -122,7 +122,21 @@ int main()
             ClearBackground(DARKBLUE);
 
             // dibujar el mundo
-            World::getInstance().Draw();
+            //World::getInstance().Draw();
+
+
+			// Manejo de excepciones alrededor del dibujo del mundo =================
+            try {
+                World::getInstance().Draw();
+            }
+            catch (const std::exception& e) {
+                std::cerr << "[EXCEPCION] " << e.what() << std::endl;
+                // Opcional: muestra un cuadro de texto o una pantalla de error en raylib
+                // y/o realiza cleanup antes de cerrar.
+                // CloseWindow(); // asegúrate de liberar recursos si es necesario
+            }
+			// fin dibujo del mundo =======================================
+
 
             DrawText("Escape from Lost Village", 10, 10, 64, YELLOW);
 

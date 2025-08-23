@@ -5,7 +5,7 @@
 #include <filesystem>
 #include <cstdio>
 
-#define TILE_SIZE 16
+#define TILE_SIZE 64
 #define TILEMAPX 16
 #define TILEMAPY 12
 #define MAX_TILES 132
@@ -32,7 +32,42 @@ namespace LoW {
             for (size_t y = 0; y < TILEMAPY; y++) {
                 for (size_t x = 0; x < TILEMAPX; x++) {
                     size_t idx = y * TILEMAPX + x;
-                    DrawTexture(tiles[tilemap[idx]], static_cast<int>(x * TILE_SIZE), static_cast<int>(y * TILE_SIZE), WHITE);
+
+
+                    // ======= INICIO BUG INTENCIONAL =======
+                    size_t tileId = tilemap[idx] + 100; // BUG: desplazamos el id artificialmente
+					// ======= FIN BUG INTENCIONAL =======
+                    std::cout << "[Draw] x=" << x
+                        << " y=" << y
+                        << " idx=" << idx
+                        << " baseId=" << tilemap[idx]
+                        << " tileId(shifted)=" << tileId
+                        << " MAX_TILES=" << MAX_TILES
+                        << std::endl;
+                    if (tileId >= MAX_TILES) {
+                        throw std::out_of_range("tileId fuera de rango en World::Draw()");
+                    }
+
+                    Texture2D& tex = tiles[tileId]; // ya es seguro
+
+
+					// Solución al bug intencional =================
+
+                    // Paso 5B) validación de rango
+                    /*if (tileId >= MAX_TILES) {
+                        std::cerr << "[ERROR] tileId=" << tileId
+                            << " fuera de [0," << (MAX_TILES - 1) << "] "
+                            << " en (" << x << "," << y << ")\n";
+                        throw std::out_of_range("tileId fuera de rango en World::Draw()");
+                    }*/
+
+                    // acceso seguro
+                    Texture2D& tex = tiles[tileId];
+					// ========================
+
+
+                    //DrawTexture(tiles[tilemap[idx]], static_cast<int>(x * TILE_SIZE), static_cast<int>(y * TILE_SIZE), WHITE);
+                    DrawTexture(tiles[tilemap[tileId]], static_cast<int>(x * TILE_SIZE), static_cast<int>(y * TILE_SIZE), WHITE);
                 }
             }
         }
@@ -47,7 +82,7 @@ namespace LoW {
         World() = default;
         World(const World&) = delete;
         World& operator=(const World&) = delete;
-
+        //float tileScale = TILE_SIZE / tiles[0].width;
         void LoadTiles(const std::string& dir) {
             char path[256];
             for (size_t i = 0; i < MAX_TILES; i++) {
