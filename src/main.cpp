@@ -11,11 +11,22 @@
 #include "Toolbox.h"
 #include "Singleton.h"
 #include "LinkedList.h"
+#include "MyDLLWrapper.h"
+
+// No se puede usar
+// #include "Windows.h"
 
 typedef Singleton<Toolbox> Logger;
 
 // es válido usarlo porque estamos desarrollando con el namespace de neustro juego
 using namespace LoW;
+
+// Callback function to test HTTPGet wrapper
+size_t httpGetCB(const char* message)
+{
+    std::cout << "[HTTP GET CALLBACK] " << message << std::endl;
+    return strlen(message);
+}
 
 struct LinkedListN {
     int data;
@@ -26,6 +37,10 @@ struct LinkedListN {
 
 int main()
 {
+    MyDLLWrapper::MBWarning(L"RPGTiles ver. 0.8 Aug 1995", L"RPGTiles");
+	// Test HTTPGet
+	MyDLLWrapper::httpGet("http://monsterballgo.com/api/names", httpGetCB);
+
     try
     {
         // Tell the window to use vsync and work on high DPI displays

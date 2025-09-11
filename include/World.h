@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <filesystem>
 #include <cstdio>
+#include <iostream>
 
 #define TILE_SIZE 64
 #define TILEMAPX 16
@@ -62,7 +63,7 @@ namespace LoW {
                     }*/
 
                     // acceso seguro
-                    Texture2D& tex = tiles[tileId];
+                    //Texture2D& tex = tiles[tileId];
 					// ========================
 
 

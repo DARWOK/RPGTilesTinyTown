@@ -262,7 +262,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>DEBUG;PLATFORM_DESKTOP;GRAPHICS_API_OPENGL_33;_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\external\raylib-master\src;..\external\raylib-master\src\external;..\external\raylib-master\src\external\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\include;..\external\raylib-master\src;..\external\raylib-master\src\external;..\external\raylib-master\src\external\glfw\include;C:\Users\darwok\Documents\SAE Institute\Trimestre 3\Datos\EjemploDLL\EjemploDLL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
@@ -273,9 +273,12 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>raylib.lib;winmm.lib;gdi32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\bin\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EjemploDLL.lib;raylib.lib;winmm.lib;gdi32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\bin\Debug;C:\Users\darwok\Documents\SAE Institute\Trimestre 3\Datos\EjemploDLL\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PreBuildEvent>
+      <Command>copy "C:\Users\darwok\Documents\SAE Institute\Trimestre 3\Datos\EjemploDLL\x64\Debug\EjemploDLL.dll" "C:\Users\darwok\Documents\SAE Institute\Trimestre 3\Datos\RPGTilesTinyTown\bin\Debug\EjemploDLL.dll"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -539,6 +542,7 @@
     <ClInclude Include="..\..\include\LinkedList.h" />
     <ClInclude Include="..\..\include\LinkedListNode.h" />
     <ClInclude Include="..\..\include\maptinytown.h" />
+    <ClInclude Include="..\..\include\MyDLLWrapper.h" />
     <ClInclude Include="..\..\include\Player.h" />
     <ClInclude Include="..\..\include\resource_dir.h" />
     <ClInclude Include="..\..\include\Sidekick.h" />
@@ -557,6 +561,7 @@
     <ClCompile Include="..\..\src\Image.cpp" />
     <ClCompile Include="..\..\src\Label.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
+    <ClCompile Include="..\..\src\MyDLLWrapper.cpp" />
     <ClCompile Include="..\..\src\Player.cpp" />
     <ClCompile Include="..\..\src\Sidekick.cpp" />
     <ClCompile Include="..\..\src\UISystem.cpp" />
