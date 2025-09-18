@@ -35,8 +35,21 @@ struct LinkedListN {
     LinkedListN(int value) : data(value), next(nullptr) {}
 };
 
-int main()
+int main(int arg, char** argv)
 {
+    // Read parameters
+
+	char* username = "Player1";
+
+    for (int i = 0; i < arg; i++)
+    {
+        std::cout << "Parámetro " << i << ": " << argv[i] << std::endl;
+        if (std::string(argv[i]) == "FROM_LAUNCHER")
+        {
+            std::cout << "El juego fue llamado desde el launcher" << std::endl;
+		}
+	}
+
     MyDLLWrapper::MBWarning(L"RPGTiles ver. 0.8 Aug 1995", L"RPGTiles");
 	// Test HTTPGet
 	MyDLLWrapper::httpGet("http://monsterballgo.com/api/names", httpGetCB);
